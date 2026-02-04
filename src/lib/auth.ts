@@ -28,13 +28,31 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async session({ session, user }) {
-            if (session.user) {
-                session.user.id = user.id
+        async jwt({ token, user, account }) {
+            // Persist the user id and discordId to the token
+            if (user) {
+                token.id = user.id
+                token.discordId = (user as { discordId?: string }).discordId
+            }
+            if (account) {
+                token.accessToken = account.access_token
+            }
+            return token
+        },
+        async session({ session, token }) {
+            // Add user id to session
+            if (session.user && token) {
+                session.user.id = token.id as string
             }
             return session
         },
-        async signIn() {
+        async signIn({ user, account, profile }) {
+            // Log sign-in attempts for debugging
+            console.log('Sign-in attempt:', {
+                userId: user?.id,
+                provider: account?.provider,
+                email: profile?.email
+            })
             return true
         },
     },
@@ -43,10 +61,12 @@ export const authOptions: NextAuthOptions = {
         error: '/login',
     },
     session: {
-        strategy: 'database',
+        // Use JWT strategy for serverless - more reliable than database sessions
+        strategy: 'jwt',
         maxAge: 30 * 24 * 60 * 60, // 30 days
     },
-    debug: process.env.NODE_ENV === 'development',
+    // Enable debug in production temporarily to see errors
+    debug: true,
 }
 
 export default NextAuth(authOptions)
