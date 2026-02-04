@@ -1,14 +1,12 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import DiscordProvider from 'next-auth/providers/discord'
-import { PrismaAdapter } from '@auth/prisma-adapter'
-import prisma from './prisma'
 
+// Temporarily simplified auth without Prisma adapter for debugging
 export const authOptions: NextAuthOptions = {
-    adapter: PrismaAdapter(prisma) as NextAuthOptions['adapter'],
     providers: [
         DiscordProvider({
-            clientId: process.env.DISCORD_CLIENT_ID!,
-            clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+            clientId: process.env.DISCORD_CLIENT_ID || '',
+            clientSecret: process.env.DISCORD_CLIENT_SECRET || '',
             authorization: {
                 params: {
                     scope: 'identify email guilds',
@@ -28,8 +26,7 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user, account }) {
-            // Persist the user id and discordId to the token
+        async jwt({ token, user, account, profile }) {
             if (user) {
                 token.id = user.id
                 token.discordId = (user as { discordId?: string }).discordId
@@ -37,23 +34,17 @@ export const authOptions: NextAuthOptions = {
             if (account) {
                 token.accessToken = account.access_token
             }
+            // Add Discord profile data
+            if (profile) {
+                token.discordId = (profile as { id?: string }).id
+            }
             return token
         },
         async session({ session, token }) {
-            // Add user id to session
             if (session.user && token) {
-                session.user.id = token.id as string
+                session.user.id = token.id as string || token.discordId as string
             }
             return session
-        },
-        async signIn({ user, account, profile }) {
-            // Log sign-in attempts for debugging
-            console.log('Sign-in attempt:', {
-                userId: user?.id,
-                provider: account?.provider,
-                email: profile?.email
-            })
-            return true
         },
     },
     pages: {
@@ -61,11 +52,10 @@ export const authOptions: NextAuthOptions = {
         error: '/login',
     },
     session: {
-        // Use JWT strategy for serverless - more reliable than database sessions
         strategy: 'jwt',
-        maxAge: 30 * 24 * 60 * 60, // 30 days
+        maxAge: 30 * 24 * 60 * 60,
     },
-    // Enable debug in production temporarily to see errors
+    secret: process.env.NEXTAUTH_SECRET,
     debug: true,
 }
 
