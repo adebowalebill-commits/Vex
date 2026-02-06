@@ -1,8 +1,10 @@
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import DiscordProvider from 'next-auth/providers/discord'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import prisma from './prisma'
 
-// Temporarily simplified auth without Prisma adapter for debugging
 export const authOptions: NextAuthOptions = {
+    adapter: PrismaAdapter(prisma) as NextAuthOptions['adapter'],
     providers: [
         DiscordProvider({
             clientId: process.env.DISCORD_CLIENT_ID || '',
@@ -26,25 +28,20 @@ export const authOptions: NextAuthOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user, account, profile }) {
-            if (user) {
-                token.id = user.id
-                token.discordId = (user as { discordId?: string }).discordId
-            }
-            if (account) {
-                token.accessToken = account.access_token
-            }
-            // Add Discord profile data
-            if (profile) {
-                token.discordId = (profile as { id?: string }).id
-            }
-            return token
-        },
-        async session({ session, token }) {
-            if (session.user && token) {
-                session.user.id = token.id as string || token.discordId as string
+        async session({ session, user }) {
+            // For database strategy, user comes from database
+            if (session.user && user) {
+                session.user.id = user.id
             }
             return session
+        },
+        async signIn({ user, account, profile }) {
+            console.log('Sign-in attempt:', {
+                userId: user?.id,
+                provider: account?.provider,
+                email: profile?.email
+            })
+            return true
         },
     },
     pages: {
@@ -52,11 +49,11 @@ export const authOptions: NextAuthOptions = {
         error: '/login',
     },
     session: {
-        strategy: 'jwt',
+        strategy: 'database',
         maxAge: 30 * 24 * 60 * 60,
     },
     secret: process.env.NEXTAUTH_SECRET,
-    debug: true,
+    debug: process.env.NODE_ENV === 'development',
 }
 
 export default NextAuth(authOptions)
