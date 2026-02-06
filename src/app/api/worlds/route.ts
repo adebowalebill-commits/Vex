@@ -3,6 +3,36 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 
+// Helper to get or create user in database
+async function ensureUserExists(session: { user: { id: string; email?: string | null; name?: string | null; image?: string | null } }) {
+    const sessionUserId = session.user.id
+
+    // First, try to find user by ID (could be database ID or Discord ID)
+    let user = await prisma.user.findFirst({
+        where: {
+            OR: [
+                { id: sessionUserId },
+                { discordId: sessionUserId }
+            ]
+        }
+    })
+
+    // If not found, create the user
+    if (!user) {
+        console.log('User not found, creating new user with discordId:', sessionUserId)
+        user = await prisma.user.create({
+            data: {
+                discordId: sessionUserId,
+                name: session.user.name,
+                email: session.user.email,
+                image: session.user.image,
+            }
+        })
+    }
+
+    return user
+}
+
 // GET - List worlds user owns or is citizen of
 export async function GET() {
     try {
@@ -15,7 +45,9 @@ export async function GET() {
             )
         }
 
-        const userId = session.user.id
+        // Ensure user exists and get their database ID
+        const user = await ensureUserExists(session as { user: { id: string; email?: string | null; name?: string | null; image?: string | null } })
+        const userId = user.id
 
         // Get worlds owned by user
         const ownedWorlds = await prisma.world.findMany({
@@ -107,13 +139,19 @@ export async function POST(request: NextRequest) {
         const session = await getServerSession(authOptions)
 
         if (!session?.user?.id) {
+            console.log('No session user id found')
             return NextResponse.json(
                 { error: 'Unauthorized' },
                 { status: 401 }
             )
         }
 
-        const userId = session.user.id
+        // Ensure user exists and get their database ID
+        const user = await ensureUserExists(session as { user: { id: string; email?: string | null; name?: string | null; image?: string | null } })
+        const userId = user.id
+
+        console.log('Creating world for user:', { sessionId: session.user.id, dbId: userId })
+
         const body = await request.json()
 
         const {
@@ -172,6 +210,8 @@ export async function POST(request: NextRequest) {
             }
         })
 
+        console.log('World created successfully:', world.id)
+
         return NextResponse.json({
             success: true,
             data: world
@@ -179,7 +219,7 @@ export async function POST(request: NextRequest) {
     } catch (error) {
         console.error('Error creating world:', error)
         return NextResponse.json(
-            { error: 'Failed to create world' },
+            { error: 'Failed to create world', details: error instanceof Error ? error.message : 'Unknown error' },
             { status: 500 }
         )
     }
