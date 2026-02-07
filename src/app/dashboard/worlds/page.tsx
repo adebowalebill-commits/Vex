@@ -51,7 +51,7 @@ export default function WorldsPage() {
 
     async function fetchWorlds() {
         try {
-            const res = await fetch('/api/worlds')
+            const res = await fetch('/api/worlds', { cache: 'no-cache' })
             const data = await res.json()
             if (data.success) {
                 setWorlds(data.data)

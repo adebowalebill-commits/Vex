@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 
+export const dynamic = 'force-dynamic'
+
 // Helper to get or create user in database
 async function ensureUserExists(session: { user: { id: string; email?: string | null; name?: string | null; image?: string | null } }) {
     const sessionUserId = session.user.id
