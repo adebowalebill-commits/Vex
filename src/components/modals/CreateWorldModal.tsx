@@ -81,78 +81,24 @@ export default function CreateWorldModal({ onClose, onSuccess }: CreateWorldModa
 
     return (
         <div
-            style={{
-                position: 'fixed',
-                inset: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 9999,
-                padding: '1rem',
-                backgroundColor: isVisible ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0)',
-                backdropFilter: isVisible ? 'blur(8px)' : 'blur(0px)',
-                WebkitBackdropFilter: isVisible ? 'blur(8px)' : 'blur(0px)',
-                transition: 'all 0.3s ease-out'
-            }}
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'bg-black/80 backdrop-blur-sm' : 'bg-transparent pointer-events-none'}`}
             onClick={handleClose}
         >
             <div
-                style={{
-                    background: 'rgba(20, 20, 30, 0.95)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '16px',
-                    padding: '24px',
-                    width: '100%',
-                    maxWidth: '500px',
-                    maxHeight: '90vh',
-                    overflowY: 'auto',
-                    transform: isVisible ? 'scale(1) translateY(0)' : 'scale(0.85) translateY(40px)',
-                    opacity: isVisible ? 1 : 0,
-                    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
-                }}
+                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 transform ${isVisible ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}`}
                 onClick={(e) => e.stopPropagation()}
+                style={{ maxHeight: '90vh', overflowY: 'auto' }}
             >
                 {/* Header */}
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    marginBottom: '24px'
-                }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                        <span style={{ fontSize: '28px' }}>🌍</span>
-                        <h2 style={{
-                            fontSize: '20px',
-                            fontWeight: '600',
-                            color: 'white',
-                            margin: 0
-                        }}>
-                            Create New World
-                        </h2>
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <span className="text-2xl">🌍</span>
+                        <h2 className="text-xl font-semibold text-white">Create New World</h2>
                     </div>
                     <button
                         type="button"
                         onClick={handleClose}
-                        style={{
-                            background: 'rgba(255, 255, 255, 0.1)',
-                            border: 'none',
-                            borderRadius: '8px',
-                            width: '32px',
-                            height: '32px',
-                            color: '#9ca3af',
-                            fontSize: '16px',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s'
-                        }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)'
-                            e.currentTarget.style.color = 'white'
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'
-                            e.currentTarget.style.color = '#9ca3af'
-                        }}
+                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white transition-colors"
                     >
                         ✕
                     </button>
@@ -160,172 +106,138 @@ export default function CreateWorldModal({ onClose, onSuccess }: CreateWorldModa
 
                 {/* Error */}
                 {error && (
-                    <div style={{
-                        marginBottom: '16px',
-                        padding: '12px',
-                        background: 'rgba(239, 68, 68, 0.2)',
-                        border: '1px solid rgba(239, 68, 68, 0.5)',
-                        borderRadius: '8px',
-                        color: '#f87171',
-                        fontSize: '14px'
-                    }}>
+                    <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
                         {error}
                     </div>
                 )}
 
                 {/* Form */}
-                <form onSubmit={handleSubmit}>
-                    <div style={{ marginBottom: '16px' }}>
-                        <label style={labelStyle}>World Name *</label>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">World Name *</label>
                         <input
                             type="text"
                             required
                             value={formData.name}
                             onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                            style={inputStyle}
+                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
                             placeholder="My Awesome Economy"
                         />
                     </div>
 
-                    <div style={{ marginBottom: '16px' }}>
-                        <label style={labelStyle}>Description</label>
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">Description</label>
                         <textarea
                             value={formData.description}
                             onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                            style={{ ...inputStyle, resize: 'vertical', minHeight: '60px' }}
+                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors min-h-[60px] resize-y"
                             placeholder="A thriving virtual economy..."
                             rows={2}
                         />
                     </div>
 
-                    <div style={{ marginBottom: '16px' }}>
-                        <label style={labelStyle}>Discord Server ID *</label>
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">Discord Server ID *</label>
                         <input
                             type="text"
                             required
                             value={formData.discordServerId}
                             onChange={e => setFormData(prev => ({ ...prev, discordServerId: e.target.value }))}
-                            style={inputStyle}
+                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
                             placeholder="123456789012345678"
                         />
-                        <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>
-                            Right-click your server → Copy Server ID (enable Developer Mode in Discord settings)
+                        <p className="text-[11px] text-gray-500 mt-1">
+                            Right-click server → Copy Server ID (Developer Mode)
                         </p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                    <div className="grid grid-cols-2 gap-3">
                         <div>
-                            <label style={labelStyle}>Currency Name</label>
+                            <label className="block text-sm text-gray-400 mb-1.5">Currency Name</label>
                             <input
                                 type="text"
                                 value={formData.currencyName}
                                 onChange={e => setFormData(prev => ({ ...prev, currencyName: e.target.value }))}
-                                style={inputStyle}
+                                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
                             />
                         </div>
                         <div>
-                            <label style={labelStyle}>Currency Symbol</label>
+                            <label className="block text-sm text-gray-400 mb-1.5">Symbol</label>
                             <input
                                 type="text"
                                 value={formData.currencySymbol}
                                 onChange={e => setFormData(prev => ({ ...prev, currencySymbol: e.target.value }))}
-                                style={{ ...inputStyle, textAlign: 'center' }}
+                                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
                                 maxLength={3}
                             />
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '16px' }}>
-                        <label style={labelStyle}>Tax Rates (%)</label>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">Tax Rates (%)</label>
+                        <div className="grid grid-cols-3 gap-3">
                             <div>
-                                <label style={{ ...labelStyle, fontSize: '11px', color: '#6b7280' }}>Sales</label>
+                                <label className="block text-[11px] text-gray-500 mb-1">Sales</label>
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={formData.salesTaxRate}
                                     onChange={e => setFormData(prev => ({ ...prev, salesTaxRate: Number(e.target.value) }))}
-                                    style={{ ...inputStyle, textAlign: 'center', padding: '8px' }}
+                                    className="w-full p-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
                                 />
                             </div>
                             <div>
-                                <label style={{ ...labelStyle, fontSize: '11px', color: '#6b7280' }}>Income</label>
+                                <label className="block text-[11px] text-gray-500 mb-1">Income</label>
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={formData.incomeTaxRate}
                                     onChange={e => setFormData(prev => ({ ...prev, incomeTaxRate: Number(e.target.value) }))}
-                                    style={{ ...inputStyle, textAlign: 'center', padding: '8px' }}
+                                    className="w-full p-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
                                 />
                             </div>
                             <div>
-                                <label style={{ ...labelStyle, fontSize: '11px', color: '#6b7280' }}>Property</label>
+                                <label className="block text-[11px] text-gray-500 mb-1">Property</label>
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={formData.propertyTaxRate}
                                     onChange={e => setFormData(prev => ({ ...prev, propertyTaxRate: Number(e.target.value) }))}
-                                    style={{ ...inputStyle, textAlign: 'center', padding: '8px' }}
+                                    className="w-full p-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div style={{ marginBottom: '24px' }}>
-                        <label style={labelStyle}>Starting Balance for New Citizens</label>
+                    <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">Starting Balance</label>
                         <input
                             type="number"
                             min="0"
                             value={formData.initialCitizenBalance}
                             onChange={e => setFormData(prev => ({ ...prev, initialCitizenBalance: Number(e.target.value) }))}
-                            style={inputStyle}
+                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
                         />
                     </div>
 
                     {/* Buttons */}
-                    <div style={{ display: 'flex', gap: '12px' }}>
+                    <div className="flex gap-3 pt-2">
                         <button
                             type="button"
                             onClick={handleClose}
-                            style={{
-                                flex: 1,
-                                padding: '14px',
-                                background: 'rgba(255, 255, 255, 0.1)',
-                                border: 'none',
-                                borderRadius: '10px',
-                                color: 'white',
-                                fontWeight: '500',
-                                fontSize: '15px',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s'
-                            }}
-                            onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)')}
-                            onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
+                            className="flex-1 py-3.5 bg-white/10 rounded-xl text-white font-medium hover:bg-white/20 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            style={{
-                                flex: 1,
-                                padding: '14px',
-                                background: 'linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%)',
-                                border: 'none',
-                                borderRadius: '10px',
-                                color: 'white',
-                                fontWeight: '600',
-                                fontSize: '15px',
-                                cursor: loading ? 'not-allowed' : 'pointer',
-                                opacity: loading ? 0.6 : 1,
-                                boxShadow: '0 4px 20px rgba(139, 92, 246, 0.3)',
-                                transition: 'all 0.2s'
-                            }}
+                            className="flex-1 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-white font-semibold shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                         >
-                            {loading ? '⏳ Creating...' : '🚀 Create World'}
+                            {loading ? 'Creating...' : 'Create World'}
                         </button>
                     </div>
                 </form>
