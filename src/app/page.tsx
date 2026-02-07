@@ -10,7 +10,7 @@ export default function HomePage() {
     }}>
       {/* Header */}
       <header style={{
-        padding: 'var(--space-lg) var(--space-xl)',
+        padding: 'var(--space-md) var(--space-xl)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -22,20 +22,20 @@ export default function HomePage() {
           gap: 'var(--space-md)',
         }}>
           <div style={{
-            width: 40,
-            height: 40,
+            width: 32,
+            height: 32,
             background: 'var(--gradient-primary)',
             borderRadius: 'var(--radius-lg)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 700,
-            fontSize: 'var(--text-lg)',
+            fontSize: 'var(--text-base)',
           }}>
             V
           </div>
           <span style={{
-            fontSize: 'var(--text-xl)',
+            fontSize: 'var(--text-lg)',
             fontWeight: 700,
             background: 'var(--gradient-primary)',
             WebkitBackgroundClip: 'text',
@@ -45,10 +45,10 @@ export default function HomePage() {
           </span>
         </div>
         <nav style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center' }}>
-          <Link href="/login" className="btn btn-ghost">
+          <Link href="/login" className="btn btn-ghost btn-sm">
             Sign In
           </Link>
-          <Link href="/login" className="btn btn-primary">
+          <Link href="/login" className="btn btn-primary btn-sm">
             Get Started
           </Link>
         </nav>
@@ -109,14 +109,14 @@ export default function HomePage() {
           </p>
 
           <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center' }}>
-            <Link href="/login" className="btn btn-primary btn-lg">
+            <Link href="/login" className="btn btn-primary">
               Launch Dashboard
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
             </Link>
-            <Link href="#features" className="btn btn-secondary btn-lg">
+            <Link href="#features" className="btn btn-secondary">
               Learn More
             </Link>
           </div>
@@ -229,7 +229,7 @@ export default function HomePage() {
           }}>
             Connect your Discord and start creating.
           </p>
-          <Link href="/login" className="btn btn-primary btn-lg">
+          <Link href="/login" className="btn btn-primary">
             Get Started Free
           </Link>
         </section>
