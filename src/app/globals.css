@@ -449,10 +449,6 @@ textarea {
   cursor: pointer;
 }
 
-.btn:active {
-  transform: scale(0.95);
-}
-
 .btn-primary {
   background: var(--gradient-primary);
   color: var(--color-text-primary);
@@ -895,7 +891,7 @@ html {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(4px);
   z-index: 40;
   opacity: 0;
   animation: fadeIn 0.2s forwards;
@@ -1679,67 +1675,20 @@ html {
   }
 }
 
-@keyframes modalPopInBouncy {
-  0% {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-
-  50% {
-    transform: scale(1.02);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes bounceSubtle {
-
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
 .modal-backdrop {
   animation: modalFadeIn 0.2s ease-out forwards;
-  backdrop-filter: blur(24px) contrast(1.1);
-  /* Heavy blur + contrast per reference */
-  background: rgba(0, 0, 0, 0.3);
 }
 
 .modal-content {
-  animation: modalPopInBouncy 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
-  box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.9);
-  /* Deep shadow for pop */
+  animation: modalPopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .modal-warning-icon {
-  animation: bounceSubtle 2s ease-in-out infinite;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-}
-
-.shadow-glow-red {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
+  animation: warningPulse 1s ease-in-out infinite;
 }
 
 @media (max-width: 640px) {
   .user-name {
     display: none;
-  }
-
-  /* Mobile Button Sizing */
-  .btn {
-    padding: var(--space-sm) var(--space-md);
-    font-size: var(--text-sm);
   }
 }

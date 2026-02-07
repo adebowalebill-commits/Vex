@@ -81,18 +81,18 @@ export default function CreateWorldModal({ onClose, onSuccess }: CreateWorldModa
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'modal-backdrop opacity-100' : 'bg-transparent backdrop-blur-none opacity-0 pointer-events-none'}`}
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'bg-black/80 backdrop-blur-sm' : 'bg-transparent pointer-events-none'}`}
             onClick={handleClose}
         >
             <div
-                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl ${isVisible ? 'modal-content scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 transform ${isVisible ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}`}
                 onClick={(e) => e.stopPropagation()}
                 style={{ maxHeight: '90vh', overflowY: 'auto' }}
             >
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                        <span className="text-2xl modal-warning-icon">🌍</span>
+                        <span className="text-2xl">🌍</span>
                         <h2 className="text-xl font-semibold text-white">Create New World</h2>
                     </div>
                     <button
@@ -228,14 +228,14 @@ export default function CreateWorldModal({ onClose, onSuccess }: CreateWorldModa
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="flex-1 py-3.5 bg-white/10 rounded-xl text-white font-medium hover:bg-white/20 transition-all hover:scale-105"
+                            className="flex-1 py-3.5 bg-white/10 rounded-xl text-white font-medium hover:bg-white/20 transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-white font-semibold shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-all hover:scale-105"
+                            className="flex-1 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-white font-semibold shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
                         >
                             {loading ? 'Creating...' : 'Create World'}
                         </button>

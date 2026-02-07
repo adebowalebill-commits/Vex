@@ -42,16 +42,16 @@ export default function DeleteWorldModal({
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'modal-backdrop opacity-100' : 'bg-transparent backdrop-blur-none opacity-0 pointer-events-none'}`}
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'bg-black/80 backdrop-blur-sm' : 'bg-transparent pointer-events-none'}`}
             onClick={handleClose}
         >
             <div
-                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl ${isVisible ? 'modal-content scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 transform ${isVisible ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
                 <div className="text-center mb-6">
-                    <div className="text-5xl mb-4 inline-block modal-warning-icon">
+                    <div className="text-5xl mb-4 inline-block animate-bounce">
                         ⚠️
                     </div>
                     <h3 className="text-2xl font-bold text-white mb-2">
@@ -84,7 +84,7 @@ export default function DeleteWorldModal({
                         type="button"
                         onClick={handleClose}
                         disabled={deleting}
-                        className="flex-1 py-3.5 bg-white/10 rounded-xl text-white font-medium hover:bg-white/20 transition-all hover:scale-105 disabled:opacity-50"
+                        className="flex-1 py-3.5 bg-white/10 rounded-xl text-white font-medium hover:bg-white/20 transition-colors disabled:opacity-50"
                     >
                         Cancel
                     </button>
@@ -92,7 +92,7 @@ export default function DeleteWorldModal({
                         type="button"
                         onClick={onConfirm}
                         disabled={deleting}
-                        className="flex-1 py-3.5 bg-red-600 rounded-xl text-white font-semibold shadow-lg shadow-glow-red hover:bg-red-700 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 py-3.5 bg-red-600 rounded-xl text-white font-semibold shadow-lg shadow-red-600/20 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {deleting ? '⏳ Deleting...' : '🗑️ Delete Forever'}
                     </button>
