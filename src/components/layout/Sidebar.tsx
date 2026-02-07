@@ -115,11 +115,16 @@ const navigation: NavSection[] = [
     },
 ]
 
-export default function Sidebar() {
+interface SidebarProps {
+    isOpen?: boolean
+    onClose?: () => void
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname()
 
     return (
-        <aside className="sidebar">
+        <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-logo">
                 <div style={{
                     width: 40,
@@ -131,10 +136,20 @@ export default function Sidebar() {
                     justifyContent: 'center',
                     fontWeight: 700,
                     fontSize: 'var(--text-lg)',
+                    color: 'white',
                 }}>
                     V
                 </div>
                 <h1>VexiumVerse</h1>
+
+                {/* Close button for mobile */}
+                <button
+                    className="sidebar-close-btn"
+                    onClick={onClose}
+                    aria-label="Close menu"
+                >
+                    ✕
+                </button>
             </div>
 
             <nav className="sidebar-nav">
@@ -146,6 +161,7 @@ export default function Sidebar() {
                                 key={item.href}
                                 href={item.href}
                                 className={`nav-link ${pathname === item.href ? 'active' : ''}`}
+                                onClick={onClose}
                             >
                                 {icons[item.icon]}
                                 <span>{item.label}</span>
