@@ -103,7 +103,7 @@ export default function IssueSubsidyModal({
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'bg-black/60 backdrop-blur-md opacity-100' : 'bg-transparent backdrop-blur-none opacity-0 pointer-events-none'}`}
+            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'modal-backdrop opacity-100' : 'bg-transparent backdrop-blur-none opacity-0 pointer-events-none'}`}
             onClick={handleClose}
         >
             <div
