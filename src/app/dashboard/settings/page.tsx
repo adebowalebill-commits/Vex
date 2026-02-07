@@ -2,18 +2,32 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import DeleteAccountModal from '@/components/modals/DeleteAccountModal'
 
 export default function SettingsPage() {
     const { data: session, status } = useSession()
     const router = useRouter()
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [deleting, setDeleting] = useState(false)
 
     useEffect(() => {
         if (status === 'unauthenticated') {
             router.push('/login')
         }
     }, [status, router])
+
+    const handleDeleteAccount = async () => {
+        setDeleting(true)
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        setDeleting(false)
+        setShowDeleteModal(false)
+        // Sign out callback
+        router.push('/')
+    }
 
     if (status === 'loading') {
         return (
@@ -82,11 +96,22 @@ export default function SettingsPage() {
                     <p className="text-gray-400 mb-4">
                         These actions are irreversible. Please proceed with caution.
                     </p>
-                    <button className="px-4 py-2 border border-red-500 text-red-400 rounded-lg hover:bg-red-500/20 transition">
+                    <button
+                        onClick={() => setShowDeleteModal(true)}
+                        className="px-4 py-2 border border-red-500 text-red-400 rounded-lg hover:bg-red-500/20 transition hover:scale-105"
+                    >
                         Delete Account
                     </button>
                 </div>
             </div>
+
+            {showDeleteModal && (
+                <DeleteAccountModal
+                    deleting={deleting}
+                    onConfirm={handleDeleteAccount}
+                    onCancel={() => setShowDeleteModal(false)}
+                />
+            )}
         </DashboardLayout>
     )
 }

@@ -2,29 +2,17 @@
 
 import { useState, useEffect } from 'react'
 
-interface DeleteWorldModalProps {
-    worldName: string
-    citizenCount: number
-    businessCount: number
-    transactionCount: number
-    treasuryBalance: number
-    currencySymbol: string
+interface DeleteAccountModalProps {
     deleting: boolean
     onConfirm: () => void
     onCancel: () => void
 }
 
-export default function DeleteWorldModal({
-    worldName,
-    citizenCount,
-    businessCount,
-    transactionCount,
-    treasuryBalance,
-    currencySymbol,
+export default function DeleteAccountModal({
     deleting,
     onConfirm,
     onCancel
-}: DeleteWorldModalProps) {
+}: DeleteAccountModalProps) {
     const [isVisible, setIsVisible] = useState(false)
 
     useEffect(() => {
@@ -55,10 +43,10 @@ export default function DeleteWorldModal({
                         ⚠️
                     </div>
                     <h3 className="text-2xl font-bold text-white mb-2">
-                        Delete World?
+                        Delete Account?
                     </h3>
                     <p className="text-gray-400">
-                        Are you sure you want to delete <strong className="text-white">{worldName}</strong>?
+                        Are you sure you want to delete your account? This action cannot be undone.
                     </p>
                 </div>
 
@@ -68,13 +56,13 @@ export default function DeleteWorldModal({
                         ⚠️ This action is permanent!
                     </p>
                     <p className="text-red-400 text-sm mb-2">
-                        All data will be deleted:
+                        You will lose access to:
                     </p>
                     <ul className="text-red-400 text-sm space-y-1 list-disc list-inside">
-                        <li>👥 {citizenCount} citizens</li>
-                        <li>🏢 {businessCount} businesses</li>
-                        <li>💸 {transactionCount} transactions</li>
-                        <li>🏦 Treasury: {currencySymbol}{treasuryBalance.toLocaleString()}</li>
+                        <li>🌎 All created worlds</li>
+                        <li>👥 All citizenships</li>
+                        <li>💰 All assets and balances</li>
+                        <li>📊 All transaction history</li>
                     </ul>
                 </div>
 
@@ -94,7 +82,7 @@ export default function DeleteWorldModal({
                         disabled={deleting}
                         className="flex-1 py-3.5 bg-red-600 rounded-xl text-white font-semibold shadow-lg shadow-glow-red hover:bg-red-700 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        {deleting ? '⏳ Deleting...' : '🗑️ Delete Forever'}
+                        {deleting ? '⏳ Deleting...' : '🗑️ Delete Account'}
                     </button>
                 </div>
             </div>
