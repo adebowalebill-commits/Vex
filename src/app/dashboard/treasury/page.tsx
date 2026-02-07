@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import IssueSubsidyModal from '@/components/modals/IssueSubsidyModal'
 
 interface TreasuryData {
     balance: number
@@ -38,6 +39,7 @@ function TreasuryContent() {
     const [treasury, setTreasury] = useState<TreasuryData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showTaxModal, setShowTaxModal] = useState(false)
+    const [showSubsidyModal, setShowSubsidyModal] = useState(false)
     const [taxRates, setTaxRates] = useState({ salesTaxRate: 5, incomeTaxRate: 10, propertyTaxRate: 2 })
     const [saving, setSaving] = useState(false)
 
@@ -239,6 +241,7 @@ function TreasuryContent() {
 
                     <div className="space-y-4">
                         <button
+                            onClick={() => setShowSubsidyModal(true)}
                             disabled={!treasury?.isOwner}
                             className="w-full p-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 rounded-lg text-left hover:border-purple-500/50 transition disabled:opacity-50"
                         >
@@ -327,6 +330,18 @@ function TreasuryContent() {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {showSubsidyModal && (
+                <IssueSubsidyModal
+                    worldId={selectedWorld}
+                    currencySymbol={symbol}
+                    onClose={() => setShowSubsidyModal(false)}
+                    onSuccess={() => {
+                        setShowSubsidyModal(false)
+                        fetchTreasury(selectedWorld)
+                    }}
+                />
             )}
         </DashboardLayout>
     )

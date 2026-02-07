@@ -2,8 +2,9 @@
 
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import DashboardLayout from '@/components/layout/DashboardLayout'
+import DeleteAccountModal from '@/components/modals/DeleteAccountModal'
 
 export default function SettingsPage() {
     const { data: session, status } = useSession()
@@ -21,6 +22,29 @@ export default function SettingsPage() {
                 <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full"></div>
             </div>
         )
+    }
+
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+    const [isDeleting, setIsDeleting] = useState(false)
+
+    const handleDeleteAccount = async () => {
+        setIsDeleting(true)
+        try {
+            const res = await fetch('/api/user/delete', {
+                method: 'DELETE',
+            })
+
+            if (res.ok) {
+                // Sign out and redirect
+                window.location.href = '/'
+            } else {
+                console.error('Failed to delete account')
+                setIsDeleting(false)
+            }
+        } catch (error) {
+            console.error('Error deleting account:', error)
+            setIsDeleting(false)
+        }
     }
 
     return (
@@ -77,16 +101,27 @@ export default function SettingsPage() {
                 </div>
 
                 {/* Danger Zone */}
-                <div className="glass-card p-6 border-red-500/30">
+                <div className="glass-card p-6 border border-red-500/30">
                     <h2 className="text-xl font-semibold text-red-400 mb-4">Danger Zone</h2>
                     <p className="text-gray-400 mb-4">
                         These actions are irreversible. Please proceed with caution.
                     </p>
-                    <button className="px-4 py-2 border border-red-500 text-red-400 rounded-lg hover:bg-red-500/20 transition">
+                    <button
+                        onClick={() => setIsDeleteModalOpen(true)}
+                        className="px-4 py-2 border border-red-500 text-red-400 rounded-lg hover:bg-red-500/20 transition"
+                    >
                         Delete Account
                     </button>
                 </div>
             </div>
+
+            {isDeleteModalOpen && (
+                <DeleteAccountModal
+                    onConfirm={handleDeleteAccount}
+                    onCancel={() => setIsDeleteModalOpen(false)}
+                    deleting={isDeleting}
+                />
+            )}
         </DashboardLayout>
     )
 }
