@@ -8,19 +8,17 @@ export default function HomePage() {
       flexDirection: 'column',
       background: 'var(--color-bg-primary)',
     }}>
-      {/* Header */}
       <header style={{
-        padding: 'var(--space-sm) var(--space-xl)',
+        padding: 'var(--space-xs) var(--space-xl)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottom: '1px solid var(--color-glass-border)',
-        height: '60px',
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 'var(--space-sm)',
+          gap: 'var(--space-md)',
         }}>
           <div style={{
             width: 28,

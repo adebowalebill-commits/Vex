@@ -81,24 +81,60 @@ export default function CreateWorldModal({ onClose, onSuccess }: CreateWorldModa
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'bg-black/80 backdrop-blur-sm' : 'bg-transparent pointer-events-none'}`}
+            style={{
+                position: 'fixed',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 9999,
+                padding: '1rem',
+                backgroundColor: isVisible ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0)',
+                backdropFilter: isVisible ? 'blur(8px)' : 'blur(0px)',
+                WebkitBackdropFilter: isVisible ? 'blur(8px)' : 'blur(0px)',
+                transition: 'all 0.3s ease-out'
+            }}
             onClick={handleClose}
         >
             <div
-                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 transform ${isVisible ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}`}
+                style={{
+                    background: 'rgba(20, 20, 30, 0.95)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '16px',
+                    padding: '24px',
+                    width: '100%',
+                    maxWidth: '500px',
+                    maxHeight: '90vh',
+                    overflowY: 'auto',
+                    transform: isVisible ? 'scale(1) translateY(0)' : 'scale(0.85) translateY(40px)',
+                    opacity: isVisible ? 1 : 0,
+                    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                }}
                 onClick={(e) => e.stopPropagation()}
-                style={{ maxHeight: '90vh', overflowY: 'auto' }}
             >
                 {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <span className="text-2xl">🌍</span>
-                        <h2 className="text-xl font-semibold text-white">Create New World</h2>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span style={{ fontSize: '24px' }}>🌍</span>
+                        <h2 style={{ fontSize: '20px', fontWeight: '600', color: 'white' }}>Create New World</h2>
                     </div>
                     <button
                         type="button"
                         onClick={handleClose}
-                        className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white transition-colors"
+                        style={{
+                            width: '32px',
+                            height: '32px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '8px',
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            border: 'none',
+                            color: '#9ca3af',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                        }}
                     >
                         ✕
                     </button>
@@ -106,136 +142,168 @@ export default function CreateWorldModal({ onClose, onSuccess }: CreateWorldModa
 
                 {/* Error */}
                 {error && (
-                    <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm">
+                    <div style={{
+                        marginBottom: '16px',
+                        padding: '12px',
+                        background: 'rgba(239, 68, 68, 0.2)',
+                        border: '1px solid rgba(239, 68, 68, 0.5)',
+                        borderRadius: '8px',
+                        color: '#f87171',
+                        fontSize: '14px'
+                    }}>
                         {error}
                     </div>
                 )}
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1.5">World Name *</label>
+                        <label style={labelStyle}>World Name *</label>
                         <input
                             type="text"
                             required
                             value={formData.name}
                             onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
+                            style={inputStyle}
                             placeholder="My Awesome Economy"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1.5">Description</label>
+                        <label style={labelStyle}>Description</label>
                         <textarea
                             value={formData.description}
                             onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors min-h-[60px] resize-y"
+                            style={{ ...inputStyle, minHeight: '60px', resize: 'vertical' }}
                             placeholder="A thriving virtual economy..."
                             rows={2}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1.5">Discord Server ID *</label>
+                        <label style={labelStyle}>Discord Server ID *</label>
                         <input
                             type="text"
                             required
                             value={formData.discordServerId}
                             onChange={e => setFormData(prev => ({ ...prev, discordServerId: e.target.value }))}
-                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
+                            style={inputStyle}
                             placeholder="123456789012345678"
                         />
-                        <p className="text-[11px] text-gray-500 mt-1">
+                        <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '4px' }}>
                             Right-click server → Copy Server ID (Developer Mode)
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3">
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1.5">Currency Name</label>
+                            <label style={labelStyle}>Currency Name</label>
                             <input
                                 type="text"
                                 value={formData.currencyName}
                                 onChange={e => setFormData(prev => ({ ...prev, currencyName: e.target.value }))}
-                                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
+                                style={inputStyle}
                             />
                         </div>
                         <div>
-                            <label className="block text-sm text-gray-400 mb-1.5">Symbol</label>
+                            <label style={labelStyle}>Symbol</label>
                             <input
                                 type="text"
                                 value={formData.currencySymbol}
                                 onChange={e => setFormData(prev => ({ ...prev, currencySymbol: e.target.value }))}
-                                className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
+                                style={{ ...inputStyle, textAlign: 'center' }}
                                 maxLength={3}
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1.5">Tax Rates (%)</label>
-                        <div className="grid grid-cols-3 gap-3">
+                        <label style={labelStyle}>Tax Rates (%)</label>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
                             <div>
-                                <label className="block text-[11px] text-gray-500 mb-1">Sales</label>
+                                <label style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginBottom: '4px' }}>Sales</label>
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={formData.salesTaxRate}
                                     onChange={e => setFormData(prev => ({ ...prev, salesTaxRate: Number(e.target.value) }))}
-                                    className="w-full p-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
+                                    style={{ ...inputStyle, padding: '8px', textAlign: 'center' }}
                                 />
                             </div>
                             <div>
-                                <label className="block text-[11px] text-gray-500 mb-1">Income</label>
+                                <label style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginBottom: '4px' }}>Income</label>
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={formData.incomeTaxRate}
                                     onChange={e => setFormData(prev => ({ ...prev, incomeTaxRate: Number(e.target.value) }))}
-                                    className="w-full p-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
+                                    style={{ ...inputStyle, padding: '8px', textAlign: 'center' }}
                                 />
                             </div>
                             <div>
-                                <label className="block text-[11px] text-gray-500 mb-1">Property</label>
+                                <label style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginBottom: '4px' }}>Property</label>
                                 <input
                                     type="number"
                                     min="0"
                                     max="100"
                                     value={formData.propertyTaxRate}
                                     onChange={e => setFormData(prev => ({ ...prev, propertyTaxRate: Number(e.target.value) }))}
-                                    className="w-full p-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm text-center focus:outline-none focus:border-purple-500 transition-colors"
+                                    style={{ ...inputStyle, padding: '8px', textAlign: 'center' }}
                                 />
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm text-gray-400 mb-1.5">Starting Balance</label>
+                        <label style={labelStyle}>Starting Balance</label>
                         <input
                             type="number"
                             min="0"
                             value={formData.initialCitizenBalance}
                             onChange={e => setFormData(prev => ({ ...prev, initialCitizenBalance: Number(e.target.value) }))}
-                            className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white text-sm focus:outline-none focus:border-purple-500 transition-colors"
+                            style={inputStyle}
                         />
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex gap-3 pt-2">
+                    <div style={{ display: 'flex', gap: '12px', paddingTop: '8px' }}>
                         <button
                             type="button"
                             onClick={handleClose}
-                            className="flex-1 py-3.5 bg-white/10 rounded-xl text-white font-medium hover:bg-white/20 transition-colors"
+                            style={{
+                                flex: 1,
+                                padding: '14px',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                border: 'none',
+                                borderRadius: '10px',
+                                color: 'white',
+                                fontWeight: '500',
+                                fontSize: '15px',
+                                cursor: 'pointer',
+                                transition: 'background 0.2s'
+                            }}
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex-1 py-3.5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl text-white font-semibold shadow-lg shadow-purple-500/20 disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
+                            style={{
+                                flex: 1,
+                                padding: '14px',
+                                background: 'linear-gradient(to right, #9333ea, #2563eb)',
+                                border: 'none',
+                                borderRadius: '10px',
+                                color: 'white',
+                                fontWeight: '600',
+                                fontSize: '15px',
+                                cursor: loading ? 'not-allowed' : 'pointer',
+                                opacity: loading ? 0.5 : 1,
+                                boxShadow: '0 4px 20px rgba(168, 85, 247, 0.4)',
+                                transition: 'all 0.2s'
+                            }}
                         >
                             {loading ? 'Creating...' : 'Create World'}
                         </button>

@@ -42,35 +42,66 @@ export default function DeleteWorldModal({
 
     return (
         <div
-            className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${isVisible ? 'bg-black/80 backdrop-blur-sm' : 'bg-transparent pointer-events-none'}`}
+            style={{
+                position: 'fixed',
+                inset: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 9999,
+                padding: '1rem',
+                backgroundColor: isVisible ? 'rgba(0, 0, 0, 0.8)' : 'rgba(0, 0, 0, 0)',
+                backdropFilter: isVisible ? 'blur(8px)' : 'blur(0px)',
+                WebkitBackdropFilter: isVisible ? 'blur(8px)' : 'blur(0px)',
+                transition: 'all 0.3s ease-out'
+            }}
             onClick={handleClose}
         >
             <div
-                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl transition-all duration-300 transform ${isVisible ? 'scale-100 translate-y-0 opacity-100' : 'scale-95 translate-y-4 opacity-0'}`}
+                style={{
+                    background: 'rgba(20, 20, 30, 0.95)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '16px',
+                    padding: '32px',
+                    width: '100%',
+                    maxWidth: '480px',
+                    textAlign: 'center',
+                    transform: isVisible ? 'scale(1) translateY(0)' : 'scale(0.9) translateY(20px)',
+                    opacity: isVisible ? 1 : 0,
+                    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                }}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}
-                <div className="text-center mb-6">
-                    <div className="text-5xl mb-4 inline-block animate-bounce">
+                <div style={{ marginBottom: '24px' }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px', display: 'inline-block', animation: 'bounce 1s infinite' }}>
                         ⚠️
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">
+                    <h3 style={{ fontSize: '24px', fontWeight: 'bold', color: 'white', marginBottom: '8px' }}>
                         Delete World?
                     </h3>
-                    <p className="text-gray-400">
-                        Are you sure you want to delete <strong className="text-white">{worldName}</strong>?
+                    <p style={{ color: '#9ca3af' }}>
+                        Are you sure you want to delete <strong style={{ color: 'white' }}>{worldName}</strong>?
                     </p>
                 </div>
 
                 {/* Warning Box */}
-                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6">
-                    <p className="text-red-400 text-sm font-semibold mb-2">
+                <div style={{
+                    background: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    marginBottom: '24px',
+                    textAlign: 'left'
+                }}>
+                    <p style={{ color: '#f87171', fontSize: '14px', fontWeight: '600', marginBottom: '8px' }}>
                         ⚠️ This action is permanent!
                     </p>
-                    <p className="text-red-400 text-sm mb-2">
+                    <p style={{ color: '#f87171', fontSize: '14px', marginBottom: '8px' }}>
                         All data will be deleted:
                     </p>
-                    <ul className="text-red-400 text-sm space-y-1 list-disc list-inside">
+                    <ul style={{ color: '#f87171', fontSize: '14px', paddingLeft: '20px', margin: 0 }}>
                         <li>👥 {citizenCount} citizens</li>
                         <li>🏢 {businessCount} businesses</li>
                         <li>💸 {transactionCount} transactions</li>
@@ -79,12 +110,24 @@ export default function DeleteWorldModal({
                 </div>
 
                 {/* Buttons */}
-                <div className="flex gap-3">
+                <div style={{ display: 'flex', gap: '12px' }}>
                     <button
                         type="button"
                         onClick={handleClose}
                         disabled={deleting}
-                        className="flex-1 py-3.5 bg-white/10 rounded-xl text-white font-medium hover:bg-white/20 transition-colors disabled:opacity-50"
+                        style={{
+                            flex: 1,
+                            padding: '14px',
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            border: 'none',
+                            borderRadius: '12px',
+                            color: 'white',
+                            fontWeight: '500',
+                            fontSize: '15px',
+                            cursor: 'pointer',
+                            opacity: deleting ? 0.5 : 1,
+                            transition: 'background 0.2s'
+                        }}
                     >
                         Cancel
                     </button>
@@ -92,7 +135,20 @@ export default function DeleteWorldModal({
                         type="button"
                         onClick={onConfirm}
                         disabled={deleting}
-                        className="flex-1 py-3.5 bg-red-600 rounded-xl text-white font-semibold shadow-lg shadow-red-600/20 hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{
+                            flex: 1,
+                            padding: '14px',
+                            background: '#dc2626',
+                            border: 'none',
+                            borderRadius: '12px',
+                            color: 'white',
+                            fontWeight: '600',
+                            fontSize: '15px',
+                            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.3)',
+                            cursor: deleting ? 'not-allowed' : 'pointer',
+                            opacity: deleting ? 0.5 : 1,
+                            transition: 'background 0.2s'
+                        }}
                     >
                         {deleting ? '⏳ Deleting...' : '🗑️ Delete Forever'}
                     </button>
