@@ -46,7 +46,7 @@ export default function DeleteWorldModal({
             onClick={handleClose}
         >
             <div
-                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl modal-content ${isVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}`}
+                className={`w-full max-w-md bg-[#14141e]/95 border border-white/10 rounded-2xl p-6 shadow-2xl ${isVisible ? 'modal-content scale-100 opacity-100' : 'scale-90 opacity-0'}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header */}

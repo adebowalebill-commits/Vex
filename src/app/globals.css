@@ -1725,7 +1725,7 @@ html {
 }
 
 .shadow-glow-red {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6) !important;
 }
 
 @media (max-width: 640px) {
