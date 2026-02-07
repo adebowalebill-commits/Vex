@@ -449,6 +449,10 @@ textarea {
   cursor: pointer;
 }
 
+.btn:active {
+  transform: scale(0.95);
+}
+
 .btn-primary {
   background: var(--gradient-primary);
   color: var(--color-text-primary);
@@ -1690,5 +1694,11 @@ html {
 @media (max-width: 640px) {
   .user-name {
     display: none;
+  }
+
+  /* Mobile Button Sizing */
+  .btn {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
   }
 }
