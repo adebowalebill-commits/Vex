@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState, Suspense } from 'react'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 
+import AdjustTaxRatesModal from '@/components/modals/AdjustTaxRatesModal'
+import IssueSubsidyModal from '@/components/modals/IssueSubsidyModal'
+
 interface TreasuryData {
     balance: number
     taxRevenue: number
@@ -38,6 +41,7 @@ function TreasuryContent() {
     const [treasury, setTreasury] = useState<TreasuryData | null>(null)
     const [loading, setLoading] = useState(true)
     const [showTaxModal, setShowTaxModal] = useState(false)
+    const [showSubsidyModal, setShowSubsidyModal] = useState(false)
     const [taxRates, setTaxRates] = useState({ salesTaxRate: 5, incomeTaxRate: 10, propertyTaxRate: 2 })
     const [saving, setSaving] = useState(false)
 
@@ -96,26 +100,6 @@ function TreasuryContent() {
             }
         } catch (error) {
             console.error('Failed to fetch treasury:', error)
-        }
-    }
-
-    async function handleSaveTaxRates() {
-        setSaving(true)
-        try {
-            const res = await fetch(`/api/worlds/${selectedWorld}/treasury`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(taxRates)
-            })
-            const data = await res.json()
-            if (data.success) {
-                setTreasury(prev => prev ? { ...prev, ...taxRates } : null)
-                setShowTaxModal(false)
-            }
-        } catch (error) {
-            console.error('Failed to update tax rates:', error)
-        } finally {
-            setSaving(false)
         }
     }
 
@@ -239,6 +223,7 @@ function TreasuryContent() {
 
                     <div className="space-y-4">
                         <button
+                            onClick={() => setShowSubsidyModal(true)}
                             disabled={!treasury?.isOwner}
                             className="w-full p-4 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 rounded-lg text-left hover:border-purple-500/50 transition disabled:opacity-50"
                         >
@@ -273,60 +258,34 @@ function TreasuryContent() {
             </div>
 
             {/* Tax Modal */}
-            {showTaxModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                    <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setShowTaxModal(false)} />
-                    <div className="relative glass-card p-6 w-full max-w-md">
-                        <h2 className="text-xl font-semibold text-white mb-4">Adjust Tax Rates</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm text-gray-400 mb-1">Sales Tax (%)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    max="100"
-                                    value={taxRates.salesTaxRate}
-                                    onChange={e => setTaxRates(prev => ({ ...prev, salesTaxRate: Number(e.target.value) }))}
-                                    className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-gray-400 mb-1">Income Tax (%)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    max="100"
-                                    value={taxRates.incomeTaxRate}
-                                    onChange={e => setTaxRates(prev => ({ ...prev, incomeTaxRate: Number(e.target.value) }))}
-                                    className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm text-gray-400 mb-1">Property Tax (%)</label>
-                                <input
-                                    type="number"
-                                    min="0"
-                                    max="100"
-                                    value={taxRates.propertyTaxRate}
-                                    onChange={e => setTaxRates(prev => ({ ...prev, propertyTaxRate: Number(e.target.value) }))}
-                                    className="w-full p-3 bg-white/10 border border-white/20 rounded-lg text-white"
-                                />
-                            </div>
-                        </div>
-                        <div className="flex gap-3 mt-6">
-                            <button onClick={() => setShowTaxModal(false)} className="flex-1 py-3 bg-white/10 rounded-lg text-white">
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleSaveTaxRates}
-                                disabled={saving}
-                                className="flex-1 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg text-white font-medium disabled:opacity-50"
-                            >
-                                {saving ? 'Saving...' : 'Save Changes'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+            {showTaxModal && treasury && (
+                <AdjustTaxRatesModal
+                    worldId={selectedWorld}
+                    currentRates={{
+                        salesTaxRate: treasury.salesTaxRate,
+                        incomeTaxRate: treasury.incomeTaxRate,
+                        propertyTaxRate: treasury.propertyTaxRate
+                    }}
+                    onClose={() => setShowTaxModal(false)}
+                    onSuccess={(newRates) => {
+                        setTreasury(prev => prev ? { ...prev, ...newRates } : null)
+                        setShowTaxModal(false)
+                    }}
+                />
+            )}
+
+            {/* Subsidy Modal */}
+            {showSubsidyModal && treasury && (
+                <IssueSubsidyModal
+                    worldId={selectedWorld}
+                    currencySymbol={symbol}
+                    maxAmount={treasury.balance}
+                    onClose={() => setShowSubsidyModal(false)}
+                    onSuccess={() => {
+                        fetchTreasury(selectedWorld)
+                        setShowSubsidyModal(false)
+                    }}
+                />
             )}
         </DashboardLayout>
     )

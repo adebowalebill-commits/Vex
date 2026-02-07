@@ -895,7 +895,7 @@ html {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(8px);
   z-index: 40;
   opacity: 0;
   animation: fadeIn 0.2s forwards;
