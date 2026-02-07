@@ -1,51 +1,40 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from "@prisma/adapter-pg"
-import { Pool } from "pg"
 
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined
-  // eslint-disable-next-line no-var
-  var prismaPool: Pool | undefined
-}
-
-function createPrismaClient(): PrismaClient {
-  const connectionString = process.env.DATABASE_URL
-
-  if (!connectionString) {
-    throw new Error('DATABASE_URL environment variable is not set')
-  }
-
-  // Reuse existing pool if available (important for serverless)
-  if (!global.prismaPool) {
-    global.prismaPool = new Pool({
-      connectionString,
-      max: 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 10000,
-    })
-  }
-
-  const adapter = new PrismaPg(global.prismaPool)
-
-  return new PrismaClient({
-    adapter,
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  })
+// PrismaClient is attached to the `global` object in development to prevent
+// exhausting your database connection limit.
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
 }
 
 // Lazy initialization - only create client when actually accessed
-let _prisma: PrismaClient | undefined
+// This avoids build-time errors when DATABASE_URL is missing
+let _prisma: PrismaClient
 
-export const prisma = new Proxy({} as PrismaClient, {
-  get(_target, prop) {
-    if (!_prisma) {
-      _prisma = global.prisma ?? createPrismaClient()
+function getPrismaClient() {
+  if (!_prisma) {
+    if (globalForPrisma.prisma) {
+      _prisma = globalForPrisma.prisma
+    } else {
+      // Standard initialization handles Supabase connection strings correctly (including SSL)
+      const client = new PrismaClient({
+        log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+      })
+
       if (process.env.NODE_ENV !== 'production') {
-        global.prisma = _prisma
+        globalForPrisma.prisma = client
       }
+      _prisma = client
     }
-    return (_prisma as unknown as Record<string, unknown>)[prop as string]
+  }
+  return _prisma
+}
+
+// Export a robust Proxy that initializes on first access
+export const prisma = new Proxy({} as PrismaClient, {
+  get(target, prop) {
+    const client = getPrismaClient()
+    // Type assertion to access properties dynamically
+    return (client as any)[prop]
   }
 })
 
