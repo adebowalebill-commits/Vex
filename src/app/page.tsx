@@ -10,32 +10,33 @@ export default function HomePage() {
     }}>
       {/* Header */}
       <header style={{
-        padding: 'var(--space-md) var(--space-xl)',
+        padding: 'var(--space-sm) var(--space-xl)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottom: '1px solid var(--color-glass-border)',
+        height: '60px',
       }}>
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: 'var(--space-md)',
+          gap: 'var(--space-sm)',
         }}>
           <div style={{
-            width: 32,
-            height: 32,
+            width: 28,
+            height: 28,
             background: 'var(--gradient-primary)',
-            borderRadius: 'var(--radius-lg)',
+            borderRadius: 'var(--radius-md)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 700,
-            fontSize: 'var(--text-base)',
+            fontSize: 'var(--text-sm)',
           }}>
             V
           </div>
           <span style={{
-            fontSize: 'var(--text-lg)',
+            fontSize: 'var(--text-base)',
             fontWeight: 700,
             background: 'var(--gradient-primary)',
             WebkitBackgroundClip: 'text',
