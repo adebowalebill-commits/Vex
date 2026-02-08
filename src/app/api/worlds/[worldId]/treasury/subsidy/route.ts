@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 
 export async function POST(
     req: Request,
-    { params }: { params: { worldId: string } }
+    { params }: { params: Promise<{ worldId: string }> }
 ) {
     try {
         const session = await getServerSession(authOptions)
@@ -15,7 +15,7 @@ export async function POST(
 
         // @ts-ignore
         const userId = session.user.id
-        const worldId = params.worldId
+        const { worldId } = await params
         const { recipientName, amount, description } = await req.json()
 
         if (!recipientName || !amount || amount <= 0) {
