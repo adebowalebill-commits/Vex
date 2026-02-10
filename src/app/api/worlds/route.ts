@@ -243,7 +243,7 @@ export async function POST(request: NextRequest) {
             )
         }
 
-        // Create world with treasury
+        // Create world with treasury AND register owner as first citizen
         const world = await prisma.world.create({
             data: {
                 name,
@@ -260,14 +260,23 @@ export async function POST(request: NextRequest) {
                     create: {
                         balance: 0
                     }
+                },
+                citizens: {
+                    create: {
+                        userId: userId,
+                        displayName: user.name || 'World Owner',
+                        walletBalance: initialCitizenBalance,
+                        isActive: true
+                    }
                 }
             },
             include: {
-                treasury: true
+                treasury: true,
+                _count: { select: { citizens: true } }
             }
         })
 
-        console.log('World created successfully:', world.id)
+        console.log('World created successfully:', world.id, '- Owner registered as citizen')
 
         return NextResponse.json({
             success: true,
