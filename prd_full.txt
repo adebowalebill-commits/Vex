@@ -1,0 +1,285 @@
+VexiumVerse — Product Requirements Document
+(PRD)
+1. Product Overview
+VexiumVerse  is a decentralized economic operating system designed to transform online communities
+(initially Discord servers) into autonomous, self-sustaining virtual economies governed by scarcity, decay,
+production chains, and consequence.
+Discord functions as the interaction and command layer , while the web platform acts as the economic
+engine , governance system, and analytics layer . All economic activity is simulated and fully compliant with
+Discord TOS—no real money or real-world financial instruments are used.
+VexiumVerse  is  explicitly  not  a  game  for  fun ,  but  an  economic  simulation  infrastructure  that  can  be
+gamified by communities.
+2. Product Goals
+Primary Goals
+Enable Discord communities to operate persistent, governed virtual economies
+Enforce real economic pressure through scarcity, decay, and inactivity penalties
+Provide transparent governance, treasury, and analytics systems
+Secondary Goals
+Prevent economic stagnation and infinite-resource collapse
+Encourage specialization, trade, and political competition
+Allow economies to fail independently without systemic risk
+3. Core Design Principles (Non-Negotiable)
+Needs must decay
+Resources must be scarce
+Production must be chained
+Inactivity must be punished
+Markets must self-balance
+All system requirements must reinforce these principles.• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+1
+
+---PAGE BREAK---
+
+4. System Architecture (High-Level)
+4.1 Platform Layers
+A. Local Economies (Worlds)
+Each Discord server represents a  sovereign economy  (“World”) with: - Its own currency - Independent
+treasury - Governance structure - Finite resources
+Failure of one world does not affect others.
+B. Global Hub
+A  coordination  layer  that  provides:  -  Inter-world  trade  routing  -  Global  identity  (passports)  -  Federal
+incentives and treasury routing - Stabilization mechanics
+The Global Hub does not control local prices or governance.
+C. Reserve Token Layer (Internal)
+A fixed-supply reserve asset used for: - Global settlement - Treasury routing - Infrastructure access - Long-
+term asset locking
+This token has no yield promises  and no profit rights.
+5. Platform Interfaces
+5.1 Discord (Front-End Interface)
+Discord is the command and interaction layer .
+Responsibilities:  - Command input (/pay, /invoice, /create_business, etc.) - Status queries (balances, needs,
+alerts) - Transaction preparation and redirection
+Constraints:  - No execution of transactions - No storage of economic state - Must remain fully Discord TOS-
+compliant
+5.2 Web Platform (Core Engine)
+The website is the system of record.
+Responsibilities:  - Execute all transactions - Maintain ledgers and inventories - Apply decay, scarcity, and
+penalties - Render dashboards and analytics - Enforce governance and permissions
+2
+
+---PAGE BREAK---
+
+6. User Roles & Permissions
+6.1 Protocol (VexiumVerse)
+Issues server licenses
+Collects protocol fees
+Provides infrastructure
+Cannot set local prices
+6.2 Server Owner (National Government)
+Capabilities:  - Create and register a world - Set tax bands (within protocol limits) - Appoint or enable
+elections for mayors - Control national treasury spending
+6.3 Mayor (Regional Government)
+Capabilities:  -  Control  land  distribution  -  Set  permit  and  license  pricing  -  Manage  regional  resource
+extraction - Compete for population and industry
+Poor governance leads to migration and capital flight.
+6.4 Business Owner
+Capabilities:  - Operate production or service businesses - Manage payroll, inventory, and P&L - Participate
+in production chains
+Businesses cannot consume their own outputs.
+6.5 Citizen
+Capabilities:  - Maintain survival needs - Earn income via labor or ownership - Spend currency on goods and
+services
+7. Survival & Pressure Mechanics
+Each citizen has three decaying needs: - Food - Water - Sleep
+Effects of Neglect:  - Reduced productivity - Inability to operate businesses - Restricted movement or work
+These mechanics ensure mandatory spending and continuous demand.• 
+• 
+• 
+• 
+3
+
+---PAGE BREAK---
+
+8. Resource & Production System
+8.1 Finite Resources
+Each region contains capped extractable resources: - Oil - Wood - Metal - Gold
+Extraction is rate-limited per cycle.
+8.2 Production Chains
+Raw resources must be processed through multiple businesses.
+Examples:  - Oil → Refinery → Fuel → Gas Station → Transport - Metal → Machinery → Vehicles → Logistics -
+Crops → Grocery → Consumers
+This enforces interdependence and trade.
+9. Core Business Categories (MVE)
+A minimum viable economy includes:
+Survival & Utilities
+Water Purification
+Farm
+Grocery Store
+Resource Extraction
+Mining
+Oil Drilling
+Processing
+Oil Refinery
+Machinery Manufacturing
+Logistics & Mobility
+Trucking Company
+Vehicle Dealership• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+4
+
+---PAGE BREAK---
+
+Infrastructure
+Business Construction
+Real Estate Construction
+10. Banking & Credit System
+Banking is infrastructure, not a player-owned business.
+Players
+Wallet balance
+Bank account
+Transaction history
+Businesses
+Dedicated wallets
+Payroll tracking
+Profit & loss tracking
+Credit
+Loans issued only by treasuries
+Asset-backed or reputation-backed
+Defaults trigger liquidation or penalties
+11. Payments & Transactions
+Invoice-based payments
+"Pay Now" execution via website
+Automatic inventory transfer
+Tax routing at source
+Full audit logs
+Optional escrow for delivery assurance
+12. Treasury System
+Treasury Revenue Sources
+Permits and licenses
+Land sales
+Transaction taxes• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+5
+
+---PAGE BREAK---
+
+Protocol incentives
+Treasury Spending
+Infrastructure subsidies
+Emergency imports
+Business loans
+Public works
+All treasuries are transparent and auditable.
+13. Inactivity & Enforcement Mechanics
+Inactivity triggers: - Permit revocation - Forced asset sales or auctions - Emergency licensing to other
+players
+These prevent economic dead zones.
+14. Dashboards
+Economy (Server Owner)
+Money supply
+Resource availability
+Production throughput
+Population trends
+Treasury health
+Regional (Mayor)
+Regional output
+Resource extraction
+Migration metrics
+Business
+Inventory
+Revenue & expenses
+Payroll
+Profit/Loss
+Citizen
+Balance
+Needs status
+Spending & income history• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+6
+
+---PAGE BREAK---
+
+15. MVP Scope
+Included
+Discord bot (core commands)
+Web platform (dashboards + engine)
+Economy/world creation
+Survival decay mechanics
+Core production chains
+Treasury and taxation
+Excluded (Post-MVP)
+Global hub inter-world trade
+Reserve token mechanics
+Elections and advanced governance
+AI economic balancing
+16. Success Metrics
+Active worlds
+Average daily transactions per world
+Resource utilization rates
+Business survival rates
+Citizen retention
+17. Summary
+VexiumVerse is an economic operating system for online communities, enforcing real economic constraints
+through governance, scarcity, decay, and consequence. Discord serves as the interaction layer , while the
+web  platform  acts  as  the  authoritative  economic  engine,  enabling  resilient,  self-balancing  virtual
+economies.• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+• 
+7
+
+---PAGE BREAK---
+
