@@ -1,3 +1,5 @@
+
+=== PAGE 1 ===
 VexiumVerse — Product Requirements Document
 (PRD)
 1. Product Overview
@@ -36,9 +38,7 @@ All system requirements must reinforce these principles.•
 • 
 • 
 1
-
----PAGE BREAK---
-
+=== PAGE 2 ===
 4. System Architecture (High-Level)
 4.1 Platform Layers
 A. Local Economies (Worlds)
@@ -65,9 +65,7 @@ The website is the system of record.
 Responsibilities:  - Execute all transactions - Maintain ledgers and inventories - Apply decay, scarcity, and
 penalties - Render dashboards and analytics - Enforce governance and permissions
 2
-
----PAGE BREAK---
-
+=== PAGE 3 ===
 6. User Roles & Permissions
 6.1 Protocol (VexiumVerse)
 Issues server licenses
@@ -96,9 +94,7 @@ These mechanics ensure mandatory spending and continuous demand.•
 • 
 • 
 3
-
----PAGE BREAK---
-
+=== PAGE 4 ===
 8. Resource & Production System
 8.1 Finite Resources
 Each region contains capped extractable resources: - Oil - Wood - Metal - Gold
@@ -132,9 +128,7 @@ Vehicle Dealership•
 • 
 • 
 4
-
----PAGE BREAK---
-
+=== PAGE 5 ===
 Infrastructure
 Business Construction
 Real Estate Construction
@@ -184,9 +178,7 @@ Transaction taxes•
 • 
 • 
 5
-
----PAGE BREAK---
-
+=== PAGE 6 ===
 Protocol incentives
 Treasury Spending
 Infrastructure subsidies
@@ -238,9 +230,7 @@ Spending & income history•
 • 
 • 
 6
-
----PAGE BREAK---
-
+=== PAGE 7 ===
 15. MVP Scope
 Included
 Discord bot (core commands)
@@ -280,6 +270,3 @@ economies.•
 • 
 • 
 7
-
----PAGE BREAK---
-

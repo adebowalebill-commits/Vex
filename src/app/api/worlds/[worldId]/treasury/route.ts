@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import prisma from '@/lib/prisma'
+import { requirePermission } from '@/lib/permissions'
 
 // GET - Get treasury data for a world
 export async function GET(
@@ -75,6 +76,17 @@ export async function GET(
             success: true,
             data: {
                 balance: world.treasury?.balance || 0,
+                revenue: {
+                    taxes: world.treasury?.totalTaxRevenue || 0,
+                    permits: world.treasury?.totalPermitRevenue || 0,
+                    land: world.treasury?.totalLandRevenue || 0,
+                    total: (world.treasury?.totalTaxRevenue || 0) + (world.treasury?.totalPermitRevenue || 0) + (world.treasury?.totalLandRevenue || 0),
+                },
+                spending: {
+                    subsidies: world.treasury?.totalSubsidies || 0,
+                    loansIssued: world.treasury?.totalLoansIssued || 0,
+                    total: (world.treasury?.totalSubsidies || 0) + (world.treasury?.totalLoansIssued || 0),
+                },
                 taxRevenue: taxRevenue._sum.amount || 0,
                 subsidiesPaid: subsidiesPaid._sum.amount || 0,
                 salesTaxRate: world.salesTaxRate,
@@ -125,7 +137,10 @@ export async function POST(
             )
         }
 
-        // Verify user is world owner
+        // Permission check: only world owner can issue subsidies
+        const permError = await requirePermission(session.user.id, worldId, 'ISSUE_SUBSIDY')
+        if (permError) return permError
+
         const world = await prisma.world.findUnique({
             where: { id: worldId },
             include: { treasury: true }
@@ -135,13 +150,6 @@ export async function POST(
             return NextResponse.json(
                 { error: 'World not found' },
                 { status: 404 }
-            )
-        }
-
-        if (world.ownerId !== session.user.id) {
-            return NextResponse.json(
-                { error: 'Only the world owner can issue subsidies' },
-                { status: 403 }
             )
         }
 
@@ -212,7 +220,10 @@ export async function PATCH(
         const body = await request.json()
         const { salesTaxRate, incomeTaxRate, propertyTaxRate } = body
 
-        // Verify user is world owner
+        // Permission check: only world owner can set tax rates
+        const permError = await requirePermission(session.user.id, worldId, 'SET_TAX_RATES')
+        if (permError) return permError
+
         const world = await prisma.world.findUnique({
             where: { id: worldId }
         })
@@ -221,13 +232,6 @@ export async function PATCH(
             return NextResponse.json(
                 { error: 'World not found' },
                 { status: 404 }
-            )
-        }
-
-        if (world.ownerId !== session.user.id) {
-            return NextResponse.json(
-                { error: 'Only the world owner can update tax rates' },
-                { status: 403 }
             )
         }
 

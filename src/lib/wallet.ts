@@ -1,4 +1,4 @@
-/**
+32/**
  * Wallet Service
  * Handles balance operations for citizens and businesses
  */
