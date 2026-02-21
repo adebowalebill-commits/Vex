@@ -1,16 +1,20 @@
 /**
- * GET /api/market — Browse marketplace listings (session-authenticated)
+ * GET /api/market — Browse marketplace listings
+ * Auth: session or bot API key
  * Query params: worldId (required)
  */
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { validateBotApiKey } from '@/lib/bot-auth'
 import { getBusinessListings } from '@/lib/marketplace'
 
 export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
+    const botAuth = validateBotApiKey(request)
+
+    if (!session?.user?.id && !botAuth.authenticated) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 

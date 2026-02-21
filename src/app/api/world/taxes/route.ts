@@ -1,16 +1,20 @@
 /**
- * PUT /api/world/taxes — Update tax rates for a world (session-authenticated, owner only)
+ * PUT /api/world/taxes — Update tax rates for a world
+ * Auth: session (owner check) or bot API key
  * Body: { worldId, salesTaxRate?, incomeTaxRate?, propertyTaxRate? }
  */
 
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { validateBotApiKey } from '@/lib/bot-auth'
 import prisma from '@/lib/prisma'
 
 export async function PUT(request: NextRequest) {
     const session = await getServerSession(authOptions)
-    if (!session?.user?.id) {
+    const botAuth = validateBotApiKey(request)
+
+    if (!session?.user?.id && !botAuth.authenticated) {
         return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -21,13 +25,14 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ success: false, error: 'worldId is required' }, { status: 400 })
         }
 
-        // Verify the session user owns this world
-        const world = await prisma.world.findFirst({
-            where: { id: worldId, ownerId: session.user.id },
-        })
-
-        if (!world) {
-            return NextResponse.json({ success: false, error: 'World not found or you are not the owner' }, { status: 403 })
+        // If session auth, verify ownership. Bot API key skips ownership check.
+        if (session?.user?.id && !botAuth.authenticated) {
+            const world = await prisma.world.findFirst({
+                where: { id: worldId, ownerId: session.user.id },
+            })
+            if (!world) {
+                return NextResponse.json({ success: false, error: 'World not found or you are not the owner' }, { status: 403 })
+            }
         }
 
         // Validate rates (0-100%)
@@ -55,7 +60,6 @@ export async function PUT(request: NextRequest) {
             return NextResponse.json({ success: false, error: 'At least one tax rate must be provided' }, { status: 400 })
         }
 
-        // Tax rates live on the World model
         const updated = await prisma.world.update({
             where: { id: worldId },
             data: rates,
