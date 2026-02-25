@@ -98,7 +98,11 @@ export async function POST(request: NextRequest) {
 
         const world = await prisma.world.findUnique({
             where: { discordServerId },
-            select: { id: true },
+            select: {
+                id: true,
+                businessCreationFee: true,
+                maxBusinessesPerCitizen: true,
+            },
         })
 
         if (!world) {
@@ -107,11 +111,56 @@ export async function POST(request: NextRequest) {
 
         const citizen = await prisma.citizen.findFirst({
             where: { user: { discordId }, worldId: world.id },
-            select: { id: true },
+            select: { id: true, walletBalance: true },
         })
 
         if (!citizen) {
             return NextResponse.json({ success: false, error: 'Citizen not found' }, { status: 404 })
+        }
+
+        // ── PRD Rule 4: Duplicate name prevention per world ──
+        const existingName = await prisma.business.findFirst({
+            where: { worldId: world.id, name: { equals: name, mode: 'insensitive' } },
+            select: { id: true },
+        })
+        if (existingName) {
+            return NextResponse.json(
+                { success: false, error: `A business named "${name}" already exists in this world` },
+                { status: 409 }
+            )
+        }
+
+        // ── PRD Rule 2: Business limit per citizen ──
+        const ownedCount = await prisma.business.count({
+            where: { ownerId: citizen.id, worldId: world.id, isActive: true },
+        })
+        if (ownedCount >= world.maxBusinessesPerCitizen) {
+            return NextResponse.json(
+                { success: false, error: `You already own ${ownedCount} business(es). Limit is ${world.maxBusinessesPerCitizen}. A permit is required for more.` },
+                { status: 403 }
+            )
+        }
+
+        // ── PRD Rule 3: Rate limit (1 per minute per citizen) ──
+        const oneMinuteAgo = new Date(Date.now() - 60_000)
+        const recentBusiness = await prisma.business.findFirst({
+            where: { ownerId: citizen.id, createdAt: { gte: oneMinuteAgo } },
+            select: { id: true },
+        })
+        if (recentBusiness) {
+            return NextResponse.json(
+                { success: false, error: 'Rate limited — wait at least 1 minute between business creations' },
+                { status: 429 }
+            )
+        }
+
+        // ── PRD Rule 1: Creation fee ──
+        const fee = world.businessCreationFee
+        if (fee > 0 && citizen.walletBalance < fee) {
+            return NextResponse.json(
+                { success: false, error: `Insufficient funds. Business creation fee is ${fee}, you have ${citizen.walletBalance}` },
+                { status: 400 }
+            )
         }
 
         // Verify region belongs to this world
@@ -123,21 +172,53 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ success: false, error: 'Region not found in this world' }, { status: 404 })
         }
 
-        // Create business with production chain setup
-        const business = await prisma.business.create({
-            data: {
-                name,
-                description: description || '',
-                type: type as never,
-                ownerId: citizen.id,
-                worldId: world.id,
-                regionId,
-                walletBalance: 0,
-            },
-            include: {
-                owner: { select: { displayName: true } },
-                region: { select: { name: true } },
-            },
+        // ── Create business + deduct fee atomically ──
+        const business = await prisma.$transaction(async (tx) => {
+            // Deduct creation fee from citizen wallet
+            if (fee > 0) {
+                await tx.citizen.update({
+                    where: { id: citizen.id },
+                    data: { walletBalance: { decrement: fee } },
+                })
+
+                // Deposit fee into world treasury
+                await tx.treasury.updateMany({
+                    where: { worldId: world.id },
+                    data: {
+                        balance: { increment: fee },
+                        totalPermitRevenue: { increment: fee },
+                    },
+                })
+
+                // Record fee transaction
+                await tx.transaction.create({
+                    data: {
+                        amount: fee,
+                        type: 'FEE',
+                        description: `Business creation fee for "${name}"`,
+                        status: 'COMPLETED',
+                        worldId: world.id,
+                        senderCitizenId: citizen.id,
+                    },
+                })
+            }
+
+            // Create the business
+            return tx.business.create({
+                data: {
+                    name,
+                    description: description || '',
+                    type: type as never,
+                    ownerId: citizen.id,
+                    worldId: world.id,
+                    regionId,
+                    walletBalance: 0,
+                },
+                include: {
+                    owner: { select: { displayName: true } },
+                    region: { select: { name: true } },
+                },
+            })
         })
 
         // Auto-setup production inputs/outputs from seed chain definitions
@@ -185,10 +266,11 @@ export async function POST(request: NextRequest) {
             console.warn('Could not auto-setup production chain for', type)
         }
 
+        const feeMsg = fee > 0 ? ` (fee: ${fee})` : ''
         return NextResponse.json({
             success: true,
             data: business,
-            message: `Business "${name}" created in ${region.name}`,
+            message: `Business "${name}" created in ${region.name}${feeMsg}`,
         }, { status: 201 })
     } catch (error) {
         console.error('Error creating business:', error)

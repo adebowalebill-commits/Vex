@@ -89,8 +89,10 @@ model World {
   propertyTaxRate   Float @default(2)
   
   // Economic settings
-  initialCitizenBalance Float @default(1000)
-  decayInterval         Int   @default(24) // Hours between decay ticks
+  initialCitizenBalance    Float @default(1000)
+  decayInterval            Int   @default(24) // Hours between decay ticks
+  businessCreationFee      Float @default(500) // Fee deducted from citizen → treasury
+  maxBusinessesPerCitizen  Int   @default(1)   // Limit without permit
   
   // Status
   isActive  Boolean @default(true)
@@ -485,6 +487,7 @@ enum TransactionType {
   PAYMENT        // Payment for goods/services
   TAX            // Tax payment to treasury
   SALARY         // Wage payment
+  FEE            // Administrative fee (e.g., business creation)
   LOAN_DISBURSEMENT
   LOAN_REPAYMENT
   TREASURY_SUBSIDY
