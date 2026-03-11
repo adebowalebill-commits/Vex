@@ -91,6 +91,8 @@ const navigation: NavSection[] = [
             { label: 'Economy', href: '/dashboard/economy', icon: 'economy' },
             { label: 'Regions', href: '/dashboard/region', icon: 'region' },
             { label: 'Treasury', href: '/dashboard/treasury', icon: 'treasury' },
+            { label: 'Production', href: '/dashboard/production', icon: 'business' },
+            { label: 'Inventory', href: '/dashboard/inventory', icon: 'dashboard' },
         ],
     },
     {
@@ -104,6 +106,7 @@ const navigation: NavSection[] = [
         title: 'Activity',
         items: [
             { label: 'Transactions', href: '/dashboard/transactions', icon: 'transactions' },
+            { label: 'Invoices', href: '/dashboard/invoices', icon: 'economy' },
         ],
     },
     {
