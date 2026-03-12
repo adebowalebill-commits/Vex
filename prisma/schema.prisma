@@ -95,7 +95,8 @@ model World {
   maxBusinessesPerCitizen  Int   @default(1)   // Limit without permit
   
   // Status
-  isActive  Boolean @default(true)
+  isActive     Boolean      @default(true)
+  economyPhase EconomyPhase @default(TRAINING)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -305,6 +306,11 @@ model Business {
   // Invoices
   sentInvoices     Invoice[] @relation("BusinessInvoiceSender")
   receivedInvoices Invoice[] @relation("BusinessInvoiceReceiver")
+}
+
+enum EconomyPhase {
+  TRAINING  // Bootcamp: essential businesses need to be filled
+  ACTIVE    // Fully operational economy
 }
 
 enum BusinessType {

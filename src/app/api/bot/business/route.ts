@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { requireBotAuth } from '@/lib/bot-auth'
+import { checkBootcampGraduation } from '@/lib/bootcamp'
 
 // GET /api/bot/business — Look up businesses by owner discord ID
 export async function GET(request: NextRequest) {
@@ -267,10 +268,16 @@ export async function POST(request: NextRequest) {
         }
 
         const feeMsg = fee > 0 ? ` (fee: ${fee})` : ''
+
+        // Check if this business fills the last bootcamp slot
+        const graduated = await checkBootcampGraduation(world.id)
+        const gradMsg = graduated ? ' 🎓 Economy graduated from Training!' : ''
+
         return NextResponse.json({
             success: true,
             data: business,
-            message: `Business "${name}" created in ${region.name}${feeMsg}`,
+            graduated,
+            message: `Business "${name}" created in ${region.name}${feeMsg}${gradMsg}`,
         }, { status: 201 })
     } catch (error) {
         console.error('Error creating business:', error)
