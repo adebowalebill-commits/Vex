@@ -1,0 +1,183 @@
+﻿
+> vexium-verse@0.1.0 build
+> prisma generate && next build
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+
+Γ£ö Generated Prisma Client (v5.22.0) to .\node_modules\@prisma\client in 906ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Help us improve the Prisma ORM for everyone. Share your feedback in a short 2-min survey: https://pris.ly/orm/survey/release-5-22
+
+Γû▓ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local, .env
+
+node.exe : ΓÜá The "middleware" 
+file convention is deprecated. 
+Please use "proxy" instead. Learn 
+more: https://nextjs.org/docs/messa
+ges/middleware-to-proxy
+At line:1 char:1
++ & "C:\Program 
+Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~
+    + CategoryInfo          : 
+NotSpeci    fied: (ΓÜá The 
+"middle...leware-to    
+-proxy:String) [], RemoteException
+    + FullyQualifiedErrorId : 
+NativeCo    mmandError
+ 
+  Creating an optimized production build ...
+Turbopack build encountered 1 
+warnings:
+./src/app/api/bot/business/route.ts
+:227:49
+Module not found: Can't resolve 
+'@/../../scripts/seed-resources'
+[0m [90m 225 |[39m         
+[90m// Auto-setup production 
+inputs/outputs from seed chain 
+definitions[39m
+ [90m 226 |[39m         
+[36mtry[39m {
+[31m[1m>[22m[39m[90m 227 
+|[39m             [36mconst[39m 
+{ [33mPRODUCTION_CHAINS[39m } 
+[33m=[39m [36mawait[39m [36mim
+port[39m([32m'@/../../scripts/see
+d-resources'[39m)
+ [90m     |[39m                  
+                               [31
+m[1m^[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m[31m[1m
+^[22m[39m[31m[1m^[22m[39m[31
+m[1m^[22m[39m[31m[1m^[22m[39
+m[31m[1m^[22m[39m[31m[1m^[22
+m[39m[31m[1m^[22m[39m
+ [90m 228 |[39m             
+[36mconst[39m chain [33m=[39m 
+[33mPRODUCTION_CHAINS[39m[type]
+ [90m 229 |[39m
+ [90m 230 |[39m             
+[36mif[39m (chain) {[0m
+
+Import map: aliased to relative './
+src/../../scripts/seed-resources' 
+inside of [project]/
+
+
+https://nextjs.org/docs/messages/mo
+dule-not-found
+
+
+Γ£ô Compiled successfully in 24.2s
+  Running TypeScript ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/52) ...
+  Generating static pages using 3 workers (13/52) 
+  Generating static pages using 3 workers (26/52) 
+  Generating static pages using 3 workers (39/52) 
+Γ£ô Generating static pages using 3 workers (52/52) in 2.4s
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ ╞Æ /api/auth/[...nextauth]
+Γö£ ╞Æ /api/bot/auth
+Γö£ ╞Æ /api/bot/bootcamp
+Γö£ ╞Æ /api/bot/business
+Γö£ ╞Æ /api/bot/consume
+Γö£ ╞Æ /api/bot/deposits
+Γö£ ╞Æ /api/bot/employment
+Γö£ ╞Æ /api/bot/inventory
+Γö£ ╞Æ /api/bot/invoice
+Γö£ ╞Æ /api/bot/market
+Γö£ ╞Æ /api/bot/members/sync
+Γö£ ╞Æ /api/bot/passport
+Γö£ ╞Æ /api/bot/permit
+Γö£ ╞Æ /api/bot/survival
+Γö£ ╞Æ /api/bot/transaction
+Γö£ ╞Æ /api/bot/transfer
+Γö£ ╞Æ /api/bot/wallet
+Γö£ ╞Æ /api/bot/world
+Γö£ ╞Æ /api/business/hire
+Γö£ ╞Æ /api/businesses
+Γö£ ╞Æ /api/businesses/[businessId]
+Γö£ ╞Æ /api/citizens
+Γö£ ╞Æ /api/citizens/[citizenId]
+Γö£ ╞Æ /api/cron/tick
+Γö£ ╞Æ /api/dashboard/stats
+Γö£ ╞Æ /api/economy/decay
+Γö£ ╞Æ /api/economy/enforcement
+Γö£ ╞Æ /api/economy/production
+Γö£ ╞Æ /api/economy/treasury
+Γö£ ╞Æ /api/market
+Γö£ ╞Æ /api/market/buy
+Γö£ ╞Æ /api/market/sell
+Γö£ ╞Æ /api/transactions
+Γö£ ╞Æ /api/transactions/confirm
+Γö£ ╞Æ /api/transactions/intent
+Γö£ ╞Æ /api/transactions/intent/details
+Γö£ ╞Æ /api/treasury
+Γö£ ╞Æ /api/user/delete
+Γö£ ╞Æ /api/world/taxes
+Γö£ ╞Æ /api/worlds
+Γö£ ╞Æ /api/worlds/[worldId]
+Γö£ ╞Æ /api/worlds/[worldId]/businesses
+Γö£ ╞Æ /api/worlds/[worldId]/citizens
+Γö£ ╞Æ /api/worlds/[worldId]/economy
+Γö£ ╞Æ /api/worlds/[worldId]/events
+Γö£ ╞Æ /api/worlds/[worldId]/inventory
+Γö£ ╞Æ /api/worlds/[worldId]/invoices
+Γö£ ╞Æ /api/worlds/[worldId]/production
+Γö£ ╞Æ /api/worlds/[worldId]/regions
+Γö£ ╞Æ /api/worlds/[worldId]/transactions
+Γö£ ╞Æ /api/worlds/[worldId]/treasury
+Γö£ ╞Æ /api/worlds/[worldId]/treasury/subsidy
+Γö£ ╞Æ /confirm/[token]
+Γö£ Γùï /dashboard
+Γö£ Γùï /dashboard/business
+Γö£ ╞Æ /dashboard/business/[businessId]
+Γö£ Γùï /dashboard/citizen
+Γö£ ╞Æ /dashboard/citizen/[citizenId]
+Γö£ Γùï /dashboard/economy
+Γö£ Γùï /dashboard/inventory
+Γö£ Γùï /dashboard/invoices
+Γö£ Γùï /dashboard/production
+Γö£ Γùï /dashboard/region
+Γö£ Γùï /dashboard/settings
+Γö£ Γùï /dashboard/transactions
+Γö£ Γùï /dashboard/treasury
+Γö£ Γùï /dashboard/worlds
+Γöö Γùï /login
+
+
+╞Æ Proxy (Middleware)
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+
