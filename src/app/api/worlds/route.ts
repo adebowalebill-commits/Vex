@@ -275,6 +275,14 @@ export async function POST(request: NextRequest) {
                         balance: 0
                     }
                 },
+                regions: {
+                    create: {
+                        name: 'Capital Region',
+                        description: 'The central hub of the economy',
+                        permitPrice: 100,
+                        landPrice: 500,
+                    }
+                },
                 citizens: {
                     create: {
                         userId: userId,

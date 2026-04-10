@@ -61,6 +61,21 @@ export async function GET(request: NextRequest) {
             )
         }
 
+        // Auto-seed default region if missing (fixes existing worlds)
+        if (!world.regions || world.regions.length === 0) {
+            const defaultRegion = await prisma.region.create({
+                data: {
+                    name: 'Capital Region',
+                    description: 'The central hub of the economy',
+                    worldId: world.id,
+                    permitPrice: 100,
+                    landPrice: 500,
+                },
+                select: { id: true, name: true, permitPrice: true, landPrice: true }
+            })
+            world.regions = [defaultRegion]
+        }
+
         let citizens = null
         if (includeCitizens) {
             citizens = await prisma.citizen.findMany({
@@ -192,6 +207,14 @@ export async function POST(request: NextRequest) {
                     create: {
                         balance: 0,
                     },
+                },
+                regions: {
+                    create: {
+                        name: 'Capital Region',
+                        description: 'The central hub of the economy',
+                        permitPrice: 100,
+                        landPrice: 500,
+                    }
                 },
             },
             include: {
