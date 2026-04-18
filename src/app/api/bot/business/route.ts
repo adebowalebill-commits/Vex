@@ -157,12 +157,6 @@ export async function POST(request: NextRequest) {
 
         // ── PRD Rule 1: Creation fee ──
         const fee = world.businessCreationFee
-        if (fee > 0 && citizen.walletBalance < fee) {
-            return NextResponse.json(
-                { success: false, error: `Insufficient funds. Business creation fee is ${fee}, you have ${citizen.walletBalance}` },
-                { status: 400 }
-            )
-        }
 
         // Verify region belongs to this world
         const region = await prisma.region.findFirst({
@@ -173,30 +167,80 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ success: false, error: 'Region not found in this world' }, { status: 404 })
         }
 
-        // ── Create business + deduct fee atomically ──
+        // ── Client Rule: Land + Permit requirement ──
+        // Basic resource businesses (FARM, LOGGING, MINING) are exempt.
+        // All others (including OIL_DRILLING) require land purchase + business permit.
+        const EXEMPT_TYPES = ['FARM', 'LOGGING', 'MINING']
+        const requiresLandAndPermit = !EXEMPT_TYPES.includes(type)
+
+        const landCost = requiresLandAndPermit ? region.landPrice : 0
+        const permitCost = requiresLandAndPermit ? region.permitPrice : 0
+        const totalCost = fee + landCost + permitCost
+
+        if (totalCost > 0 && citizen.walletBalance < totalCost) {
+            const breakdown = []
+            if (fee > 0) breakdown.push(`Creation fee: ${fee}`)
+            if (landCost > 0) breakdown.push(`Land purchase: ${landCost}`)
+            if (permitCost > 0) breakdown.push(`Business permit: ${permitCost}`)
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: `Insufficient funds. Total cost: ${totalCost} (${breakdown.join(' + ')}). You have ${citizen.walletBalance}`,
+                },
+                { status: 400 }
+            )
+        }
+
+        // ── Create business + deduct all fees atomically ──
         const business = await prisma.$transaction(async (tx) => {
-            // Deduct creation fee from citizen wallet
-            if (fee > 0) {
+            // Deduct total cost from citizen
+            if (totalCost > 0) {
                 await tx.citizen.update({
                     where: { id: citizen.id },
-                    data: { walletBalance: { decrement: fee } },
+                    data: { walletBalance: { decrement: totalCost } },
                 })
 
-                // Deposit fee into world treasury
+                // Route all fees to world treasury
                 await tx.treasury.updateMany({
                     where: { worldId: world.id },
                     data: {
-                        balance: { increment: fee },
-                        totalPermitRevenue: { increment: fee },
+                        balance: { increment: totalCost },
+                        totalPermitRevenue: { increment: permitCost + fee },
                     },
                 })
+            }
 
-                // Record fee transaction
+            // Record individual fee transactions for audit trail
+            if (fee > 0) {
                 await tx.transaction.create({
                     data: {
                         amount: fee,
                         type: 'FEE',
                         description: `Business creation fee for "${name}"`,
+                        status: 'COMPLETED',
+                        worldId: world.id,
+                        senderCitizenId: citizen.id,
+                    },
+                })
+            }
+            if (landCost > 0) {
+                await tx.transaction.create({
+                    data: {
+                        amount: landCost,
+                        type: 'LAND_PURCHASE',
+                        description: `Land purchase in ${region.name} for "${name}"`,
+                        status: 'COMPLETED',
+                        worldId: world.id,
+                        senderCitizenId: citizen.id,
+                    },
+                })
+            }
+            if (permitCost > 0) {
+                await tx.transaction.create({
+                    data: {
+                        amount: permitCost,
+                        type: 'PERMIT_PURCHASE',
+                        description: `Business permit in ${region.name} for "${name}"`,
                         status: 'COMPLETED',
                         worldId: world.id,
                         senderCitizenId: citizen.id,
@@ -267,7 +311,11 @@ export async function POST(request: NextRequest) {
             console.warn('Could not auto-setup production chain for', type)
         }
 
-        const feeMsg = fee > 0 ? ` (fee: ${fee})` : ''
+        const costParts = []
+        if (fee > 0) costParts.push(`fee: ${fee}`)
+        if (landCost > 0) costParts.push(`land: ${landCost}`)
+        if (permitCost > 0) costParts.push(`permit: ${permitCost}`)
+        const costMsg = costParts.length > 0 ? ` (${costParts.join(', ')}, total: ${totalCost})` : ''
 
         // Check if this business fills the last bootcamp slot
         const graduated = await checkBootcampGraduation(world.id)
@@ -277,11 +325,13 @@ export async function POST(request: NextRequest) {
             success: true,
             data: business,
             graduated,
-            message: `Business "${name}" created in ${region.name}${feeMsg}${gradMsg}`,
+            costs: { creationFee: fee, landPurchase: landCost, permitFee: permitCost, total: totalCost },
+            message: `Business "${name}" created in ${region.name}${costMsg}${gradMsg}`,
         }, { status: 201 })
     } catch (error) {
         console.error('Error creating business:', error)
-        return NextResponse.json({ success: false, error: 'Failed to create business' }, { status: 500 })
+        const message = error instanceof Error ? error.message : 'Failed to create business'
+        return NextResponse.json({ success: false, error: `Failed to create business: ${message}` }, { status: 500 })
     }
 }
 
