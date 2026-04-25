@@ -1,4 +1,4 @@
-/**
+ /**
  * Ledger Service
  * Handles transaction recording and tax calculations
  */

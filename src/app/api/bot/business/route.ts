@@ -167,14 +167,15 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ success: false, error: 'Region not found in this world' }, { status: 404 })
         }
 
-        // ── Client Rule: Land + Permit requirement ──
-        // Basic resource businesses (FARM, LOGGING, MINING) are exempt.
-        // All others (including OIL_DRILLING) require land purchase + business permit.
-        const EXEMPT_TYPES = ['FARM', 'LOGGING', 'MINING']
-        const requiresLandAndPermit = !EXEMPT_TYPES.includes(type)
+        // ── Client Rule: Land + Permit required for ALL business types ──
+        // Note: FARM, LOGGING, MINING skip the construction prerequisite
+        // (they don't need a BUSINESS_CONSTRUCTION company to build first)
+        // but they still pay land + permit fees like everyone else.
+        const CONSTRUCTION_EXEMPT_TYPES = ['FARM', 'LOGGING', 'MINING']
+        const requiresConstruction = !CONSTRUCTION_EXEMPT_TYPES.includes(type)
 
-        const landCost = requiresLandAndPermit ? region.landPrice : 0
-        const permitCost = requiresLandAndPermit ? region.permitPrice : 0
+        const landCost = region.landPrice
+        const permitCost = region.permitPrice
         const totalCost = fee + landCost + permitCost
 
         if (totalCost > 0 && citizen.walletBalance < totalCost) {
